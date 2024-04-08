@@ -5,33 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        let includes = document.querySelectorAll('[include-html]');
-
-        for (var i = 0; i < includes.length; i++) {
-            !function(include){
-                let filePath = include.getAttribute('include-html');
-                fetch(filePath)
-                    .then(function(response) {
-                        return response.text();
-                    })
-                    .then(function(html) {
-                        include.innerHTML = html;
-                        include.removeAttribute('include-html');
-                        document.dispatchEvent(new Event("DOMContentLoaded"));
-                    })
-                    .catch(function(error) {
-                        console.warn('Error loading ' + filePath, error);
-                    });
-            }(includes[i]);
-        }
-    });
-</script>
-<script>
-    Array.forEach.call();
-</script>
 <body>
     <div include-html="/header.html"></div>
+    <div include-html="/footer.html"></div>
 </body>
 </html>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let includes = document.querySelectorAll('[include-html]');        
+        includes.forEach(include => {
+            !function(include){
+                let filePath = include.getAttribute('include-html');
+                console.log('file path : ' + filePath);
+                fetch(filePath)
+                    .then(res => res.text())
+                    .then((html) => {
+                        include.innerHTML = html;
+                    })
+            }(include);
+        });
+
+    });
+
+</script>

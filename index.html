@@ -6,8 +6,8 @@
     <title>Document</title>
 </head>
 <body>
-    <div include-html="/header.html"></div>
-    <div include-html="/footer.html"></div>
+    <section class="headerSection" include-html="/header.html"></section>
+    <section class="footerSection" include-html="/footer.html"></section>
 </body>
 </html>
 <script>
@@ -19,9 +19,24 @@
                 console.log('file path : ' + filePath);
                 fetch(filePath)
                     .then(res => res.text())
-                    .then((html) => {
+                    .then((totalCode) => {
+                        const scriptRegex = /<script\b[^>]*>([\s\S]*?)<\/script>/gm;
+                        let scripts = [];
+                        let html = totalCode.replace(scriptRegex, function(match, script){
+                            scripts.push(script);
+                            return '';
+                        });
+                        console.log(html);
                         include.innerHTML = html;
+
+                        scripts.forEach(script =>{
+                            let scriptTag = document.createElement('script');
+                            scriptTag.textContent = script;
+                            document.body.appendChild(scriptTag);
+                        });
+                        include.removeAttribute('include-html');
                     })
+                    .catch(error => console.warn('Loading erorr ' + filePath, error));
             }(include);
         });
 

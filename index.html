@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 </head>
 <body>
     <section class="headerSection" include-html="/header.html"></section>
     <section class="footerSection" include-html="/footer.html"></section>
 </body>
 </html>
-<script>
+<!-- <script>
     document.addEventListener("DOMContentLoaded", function() {
         let includes = document.querySelectorAll('[include-html]');        
         includes.forEach(include => {
@@ -41,5 +42,9 @@
         });
 
     });
+</script> -->
 
+<script> //use jQuery
+    $('.headerSection').load('/header.html');
+    $('.footerSection').load('/footer.html');
 </script>

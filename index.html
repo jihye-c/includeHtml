@@ -9,42 +9,49 @@
 <body>
     <section class="headerSection" include-html="/header.html"></section>
     <section class="footerSection" include-html="/footer.html"></section>
+    <section class="headerSection" ></section>
+    <section class="footerSection" ></section>
 </body>
 </html>
-<!-- <script>
+<script>
     document.addEventListener("DOMContentLoaded", function() {
-        let includes = document.querySelectorAll('[include-html]');        
+
+        let includes = document.querySelectorAll('[include-html]');
+        if(includes.length == 0) return; // 불러올 html이 없다면 return;
+        
         includes.forEach(include => {
-            !function(include){
-                let filePath = include.getAttribute('include-html');
-                console.log('file path : ' + filePath);
-                fetch(filePath)
-                    .then(res => res.text())
+            (function(include){ //즉시 실행 함수
+                //filePath가져오기
+                fetch(include.getAttribute('include-html'))//File Path 넘겨줌
+                    .then(res => res.text())//html 로딩
                     .then((totalCode) => {
+                        //정규표현식 통해 스크립트 태그 분리
                         const scriptRegex = /<script\b[^>]*>([\s\S]*?)<\/script>/gm;
                         let scripts = [];
                         let html = totalCode.replace(scriptRegex, function(match, script){
-                            scripts.push(script);
+                            scripts.push(script);//스크립트 배열 안에 스크립트 넣기
                             return '';
                         });
-                        console.log(html);
-                        include.innerHTML = html;
 
+                        //html 및 script 입력
+                        include.innerHTML = html;
                         scripts.forEach(script =>{
                             let scriptTag = document.createElement('script');
                             scriptTag.textContent = script;
                             document.body.appendChild(scriptTag);
                         });
+
+                        //태그 지우기
                         include.removeAttribute('include-html');
                     })
                     .catch(error => console.warn('Loading erorr ' + filePath, error));
-            }(include);
+            }(include));
         });
 
     });
-</script> -->
+</script>
 
-<script> //use jQuery
+<!-- <script> //use jQuery
     $('.headerSection').load('/header.html');
     $('.footerSection').load('/footer.html');
-</script>
+</script> -->
